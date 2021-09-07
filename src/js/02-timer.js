@@ -65,10 +65,7 @@ function convertMs(ms) {
   const time = convertMs(timeLeft);
   changeInterface(time);
 }
-
-
-
-      
+  
 function stop() {
   refs.startBtn.disabled = false;
   refs.stopBtn.disabled = true;
