@@ -67,7 +67,7 @@ function convertMs(ms) {
 }
   
 function stop() {
-  refs.startBtn.disabled = false;
+  refs.startBtn.removeAttribute(`disabled`);
   refs.stopBtn.disabled = true;
  clearInterval(intervalId);
  return;
