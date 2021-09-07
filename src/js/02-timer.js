@@ -1,6 +1,4 @@
-import { Notify } from 'notiflix';
 import 'flatpickr/dist/flatpickr.min.css';
-import 'notiflix/dist/notiflix-3.0.2.min.css';
 import flatpickr from 'flatpickr';
 
 const refs = {
@@ -11,12 +9,14 @@ hoursLeft: document.querySelector('[data-hours]'),
 minutesLeft: document.querySelector('[data-minutes]'),
 secondsLeft: document.querySelector('[data-seconds]'),
 };
+
 refs.startBtn.addEventListener('click', start);
 refs.stopBtn.addEventListener('click', stop);
 let timeSelected;
 let intervalId;
-let isActive = false;
-  
+refs.stopBtn.disabled = true;
+refs.startBtn.disabled = true;
+
 const options = {
    enableTime: true,
     time_24hr: true,
@@ -24,60 +24,58 @@ const options = {
     minuteIncrement: 1,
       onClose(selectedDates) {
       timeSelected = Date.parse(selectedDates);
+      if (timeSelected - Date.now() <= 0) {
+        alert('Please choose a date in the future', { clickToClose: true });
+        return;
+          }
+          else {
+            refs.startBtn.removeAttribute(`disabled`);
+
+          }
       },
-     onChange() {
-    refs.startBtn.removeAttribute('disabled');
-  },
 };
 
 flatpickr('#date-selector', options);
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-      
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-      
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);   
   return { days, hours, minutes, seconds };
  }      
 
-function start() {
- if (isActive) {
+ function start() {
+    intervalId = setIntervalImmediately(updateTime, 1000);
+    refs.startBtn.disabled = true;
+    refs.stopBtn.removeAttribute(`disabled`);
+ }
+
+ function updateTime() {
+  const timeLeft = timeSelected - Date.now();
+  if (timeLeft <= 0) {
+    clearInterval(intervalId);
+    refs.startBtn.disabled = true;
     return;
-   }
-   if (timeSelected - Date.now() <= 0) {
- Notify.failure('Please choose a date in the future', { clickToClose: true });
- return;
-   }
-   intervalId = setIntervalImmediately(updateTime, 1000);
-   isActive = true;
+  }
+  const time = convertMs(timeLeft);
+  changeInterface(time);
 }
+
+
       
 function stop() {
- isActive = false;
+  refs.startBtn.disabled = false;
+  refs.stopBtn.disabled = true;
  clearInterval(intervalId);
+ return;
 }
       
-function updateTime() {
-   const timeLeft = timeSelected - Date.now();
-   if (timeLeft < 0) {
-     clearInterval(intervalId);
-     isActive = false;
-     return;
-   }
-   const time = convertMs(timeLeft);
-   changeInterface(time);
- }
+
       
  function changeInterface({ days, hours, minutes, seconds }) {
    refs.daysLeft.textContent = addLeadingZero(days);
@@ -85,6 +83,7 @@ function updateTime() {
    refs.minutesLeft.textContent = addLeadingZero(minutes);
    refs.secondsLeft.textContent = addLeadingZero(seconds);
  }
+
  function addLeadingZero(value) {
    return String(value).padStart(2, '0');
  }
