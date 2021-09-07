@@ -6,7 +6,7 @@ const startBtn = document.querySelector("button[data-start]");
 const stopBtn = document.querySelector("button[data-stop]");
 const body = document.querySelector("body");
 
-let timerId = null;
+let timerId;
 let delay = 1000;
 
 startBtn.addEventListener("click", (event) => {
