@@ -7,7 +7,6 @@ stopBtn : document.querySelector("button[data-stop]"),
 body : document.querySelector("body"),
 }
 let timerId;
-let delay = 1000;
 
 refs.startBtn.addEventListener("click", (event) => {
     event.target.disabled = true;
@@ -16,7 +15,7 @@ refs.startBtn.addEventListener("click", (event) => {
         const color = getRandomHexColor();
         refs.body.style.backgroundColor = color;
         return color;
-      }, delay)
+      }, 1000)
 });
 // * - Адская копипаста со стека 💩 - нет, не копипаста))))
 refs.stopBtn.disabled = true;
