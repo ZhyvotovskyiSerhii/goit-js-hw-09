@@ -1,5 +1,5 @@
-import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const refs = {
 startBtn: document.querySelector('[data-start]'),
@@ -12,7 +12,7 @@ secondsLeft: document.querySelector('[data-seconds]'),
 
 refs.startBtn.addEventListener('click', start);
 refs.stopBtn.addEventListener('click', stop);
-let timeSelected;
+let timeSet;
 let intervalId;
 refs.stopBtn.disabled = true;
 refs.startBtn.disabled = true;
@@ -23,19 +23,16 @@ const options = {
     defaultDate: new Date(),
     minuteIncrement: 1,
       onClose(selectedDates) {
-      timeSelected = Date.parse(selectedDates);
-      if (timeSelected - Date.now() <= 0) {
-        alert('Please choose a date in the future', { clickToClose: true });
+      timeSet = Date.parse(selectedDates);
+      if (timeSet - Date.now() <= 0) {
+        alert('Please choose a date in the future');
         return;
           }
           else {
             refs.startBtn.removeAttribute(`disabled`);
-
           }
       },
 };
-
-flatpickr('#date-selector', options);
 
 function convertMs(ms) {
   const second = 1000;
@@ -49,48 +46,41 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
  }      
 
- function start() {
-    intervalId = setIntervalImmediately(updateTime, 1000);
+ function start(){ 
+    intervalId = setInterval(() => {
     refs.startBtn.disabled = true;
     refs.stopBtn.removeAttribute(`disabled`);
+    const timeLeft = timeSet - Date.now();
+    if (timeLeft <= 0) {
+      stop();
+      refs.startBtn.disabled = true;
+      return;
+    }
+    const time = convertMs(timeLeft);
+    timerConv(time);
+  });
  }
 
- function updateTime() {
-  const timeLeft = timeSelected - Date.now();
-  if (timeLeft <= 0) {
-    clearInterval(intervalId);
-    refs.startBtn.disabled = true;
-    return;
-  }
-  const time = convertMs(timeLeft);
-  changeInterface(time);
+
+ function timerConv({ days, hours, minutes, seconds }) {
+  refs.daysLeft.textContent = addLeadingZero(days);
+  refs.hoursLeft.textContent = addLeadingZero(hours);
+  refs.minutesLeft.textContent = addLeadingZero(minutes);
+  refs.secondsLeft.textContent = addLeadingZero(seconds);
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
 }
   
 function stop() {
   refs.startBtn.removeAttribute(`disabled`);
   refs.stopBtn.disabled = true;
- clearInterval(intervalId);
+  clearInterval(intervalId);
  return;
 }
-      
-
-      
- function changeInterface({ days, hours, minutes, seconds }) {
-   refs.daysLeft.textContent = addLeadingZero(days);
-   refs.hoursLeft.textContent = addLeadingZero(hours);
-   refs.minutesLeft.textContent = addLeadingZero(minutes);
-   refs.secondsLeft.textContent = addLeadingZero(seconds);
- }
-
- function addLeadingZero(value) {
-   return String(value).padStart(2, '0');
- }
  
- function setIntervalImmediately(func, interval) {
-   func();
-   return setInterval(func, interval);
- }
- 
+ flatpickr('#date-selector', options);
 
      
      
