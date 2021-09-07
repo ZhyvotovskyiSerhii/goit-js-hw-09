@@ -14,12 +14,16 @@ function onSubmit(event) {
   let delay = Number(refs.startDelay.value);
   for (let i = 0; i < Number(refs.amount.value); i++) {
     const position = i+1;
-    createPromise(position, delay)
-    .then(onSuccess)
-    .catch(onError);
     delay += Number(refs.step.value);
+    createPromise(position, delay)
+    .then(({ position, delay }) => {
+      Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,{useIcon: false, clickToClose: true});
+    })
+    .catch(({ position, delay }) => {
+      Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,{useIcon: false, clickToClose: true});
+    });
+    
   }
- 
 }
 
 function createPromise(position, delay) {
@@ -35,10 +39,10 @@ function createPromise(position, delay) {
   });
 }
 
-function onSuccess({ position, delay }) {
-Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,{useIcon: false});
-}
+// function onSuccess({ position, delay }) {
+// Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`,{useIcon: false});
+// }
 
-function onError({ position, delay }) {
-Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,{useIcon: false});
-}
+// function onError({ position, delay }) {
+// Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`,{useIcon: false});
+// }
