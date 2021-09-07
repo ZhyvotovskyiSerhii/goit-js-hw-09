@@ -24,12 +24,10 @@ const options = {
     minuteIncrement: 1,
       onClose(selectedDates) {
       timeSet = Date.parse(selectedDates);
+      refs.startBtn.removeAttribute(`disabled`);
       if (timeSet - Date.now() <= 0) {
         alert('Please choose a date in the future');
         return;
-          }
-          else {
-            refs.startBtn.removeAttribute(`disabled`);
           }
       },
 };
