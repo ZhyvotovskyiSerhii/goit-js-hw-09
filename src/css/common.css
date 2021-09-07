@@ -16,3 +16,32 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  list-style: none;
+  display: flex;
+  text-align: center;
+}
+.value {
+  font-weight: 400;
+  font-size: 40px;
+}
+.label {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+}
+
+.field {
+  margin: 10px;
+}
+
+.js-btn {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 15px;
+}
+
+#date-selector {
+  margin: 50px;
+}
