@@ -68,8 +68,6 @@ function convertMs(ms) {
 
 
 
-
-
       
 function stop() {
   refs.startBtn.disabled = false;
