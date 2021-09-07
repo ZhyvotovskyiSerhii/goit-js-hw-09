@@ -18,7 +18,6 @@ img {
 }
 
 .timer {
-  list-style: none;
   display: flex;
   text-align: center;
 }
@@ -36,11 +35,7 @@ img {
   margin: 10px;
 }
 
-.js-btn {
-  border: 1px solid rgb(24, 23, 23);
-  border-radius: 5px;
-  margin: 15px;
-}
+
 
 #date-selector {
   margin: 50px;
